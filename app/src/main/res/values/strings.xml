@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DEV_intensive</string>
+    <string name="text">Введите текст</string>
 </resources>
