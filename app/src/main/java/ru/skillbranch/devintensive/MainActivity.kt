@@ -21,14 +21,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
 
     lateinit var benderImage: ImageView
     lateinit var textTxt: TextView
-    lateinit var et_message: EditText
+    lateinit var messageEt: EditText
     lateinit var sendBtn: ImageView
 
 
     lateinit var benderObj: Bender
 
     val STATUS_KEY = "STATUS"
-    val question_key = "STATUS"
+    val question_key = "Question"
+    val answer_key = "answer"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
 
         val status = savedInstanceState?.getString(STATUS_KEY) ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString(question_key) ?: Bender.Question.NAME.name
+        val savedAnswer = savedInstanceState?.getString(answer_key) ?: ""
         benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
 
         benderImage = iv_bender
@@ -46,16 +48,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
         benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
 
         textTxt = tv_text
-        et_message = edt_text
+        messageEt = et_message
+        if (!savedAnswer.isNullOrBlank()) {
+            messageEt.setText(savedAnswer)
+        }
         sendBtn = iv_send
 
         textTxt.text = benderObj.askQuestion()
         sendBtn.setOnClickListener(this)
 
-        et_message.setOnEditorActionListener { v, actionId, _ ->
+        messageEt.setOnEditorActionListener { v, actionId, _ ->
            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val (answer, color) = benderObj.listenAnswer(v.text.toString())
-                et_message.text.clear()
+                messageEt.text.clear()
                 val (r, g, b) = color
                 benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
                 textTxt.text = answer
@@ -76,6 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
         super.onSaveInstanceState(outState)
         outState.putString(STATUS_KEY, benderObj.status.name)
         outState.putString(question_key, benderObj.question.name)
+        outState.putString(answer_key, et_message.text.toString())
         Log.d("MainActivity","onSaveInstanceState ${benderObj.status.name}")
     }
 
@@ -111,8 +117,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
 
     override fun onClick(v: View?) {
         if (v?.id == iv_send.id) {
-            val (answer, color) = benderObj.listenAnswer(et_message.text.toString())
-            et_message.text.clear()
+            val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
+            messageEt.text.clear()
             val (r, g, b) = color
             benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
             textTxt.text = answer
