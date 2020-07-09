@@ -21,7 +21,7 @@ interface KeyboardListener {
     fun onSoftKeyboardShown(isShowing: Boolean)
 }
 
-fun Activity.isKeyboardOpen(keyboardListener: KeyboardListener?) {
+fun Activity.checkKeyboard(keyboardListener: KeyboardListener?){
     globalKeyboardListener = keyboardListener
     val rootView = this.window.decorView
     rootView.viewTreeObserver.addOnGlobalLayoutListener {
@@ -30,5 +30,7 @@ fun Activity.isKeyboardOpen(keyboardListener: KeyboardListener?) {
         val heightDiff = rootView.rootView.height - (r.bottom - r.top)
         globalKeyboardListener?.onSoftKeyboardShown(heightDiff > 200)
     }
-
 }
+
+fun Activity.isKeyboardOpen():Boolean=true
+fun Activity.isKeyboardClosed():Boolean=true
