@@ -48,7 +48,7 @@
                     android:layout_marginStart="@dimen/spacing_huge_32"
                     android:layout_marginTop="36dp"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                     android:id="@+id/tv_nick_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                     style="@style/Profile.Header.Nickname"
                     android:text="@string/john_doe"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                     android:id="@+id/tv_rank"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,14 +81,14 @@
                       android:paddingTop="@dimen/spacing_normal_16"
                       android:paddingBottom="@dimen/spacing_normal_16">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                     android:id="@+id/tv_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/Profile.Metrics.Value"
                     android:text="@string/_0"
                     android:drawableStart="@drawable/ic_sp_24"/>
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/Profile.Metrics.Value"
@@ -108,14 +108,14 @@
                       android:paddingTop="@dimen/spacing_normal_16"
                       android:paddingBottom="@dimen/spacing_normal_16">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/Profile.Metrics.Value"
                     android:text="@string/_0"
                     android:id="@+id/tv_respect"
                     android:drawableStart="@drawable/ic_respect_24"/>
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/Profile.Metrics.Value"
@@ -181,7 +181,7 @@
             android:layout_height="wrap_content"
             style="@style/Profile.InfoItem"
             android:orientation="horizontal">
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
                 android:id="@+id/iv_about"
                 android:layout_width="@dimen/btn_round_size_40"
                 android:layout_height="@dimen/btn_round_size_40"
