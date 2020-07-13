@@ -31,7 +31,7 @@
                     android:layout_marginEnd="@dimen/spacing_huge_32"
                     android:layout_marginTop="36dp"/>
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="@dimen/avatar_round_size"
                     android:layout_height="@dimen/avatar_round_size"
