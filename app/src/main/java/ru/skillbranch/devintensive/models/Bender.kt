@@ -14,15 +14,15 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
         val extra = validation(answer)
         if (!extra.isNullOrEmpty()) {
-            return "$extra ${question.question}" to status.color
+            return "$extra\n${question.question}" to status.color
         }
-        if (question == Question.IDLE){
+        if (question == Question.IDLE) {
             return question.question to status.color
         }
         return if (question.answer.contains(answer.toLowerCase())) {
 
             question = question.nextQuestion()
-            "Отлично - ты справился \n ${question.question}" to status.color
+            "Отлично - ты справился\n${question.question}" to status.color
 
         } else {
             if (status != Status.CRITICAL) {
@@ -40,18 +40,18 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     private fun validation(answer: String): String? {
-        return when (question) {
-            Question.NAME -> {
-                if (!answer.first().isUpperCase()) "Имя должно начинаться с заглавной буквы \n" else null
-            }
-            Question.PROFESSION -> if (!answer.first().isLowerCase()) "Профессия должна начинаться со строчной буквы\n" else null
-            Question.MATERIAL -> if (answer.matches(".*\\d+.*".toRegex())) "Материал не должен содержать цифр \n" else null
-            Question.BDAY -> if(!answer.matches("[0-9]+".toRegex())) "Год моего рождения должен содержать только цифры\n" else null
-            Question.SERIAL -> if (!answer.matches("[0-9]+".toRegex()).and(answer.length == 7))
-                "Серийный номер содержит только цифры, и их 7\n" else null
-            Question.IDLE -> null
+        return if (!question.isValid(answer)) {
+            when (question) {
+                Question.NAME -> "Имя должно начинаться с заглавной буквы"
+                Question.PROFESSION -> "Профессия должна начинаться со строчной буквы"
+                Question.MATERIAL -> "Материал не должен содержать цифр"
+                Question.BDAY -> "Год моего рождения должен содержать только цифры"
+                Question.SERIAL -> "Серийный номер содержит только цифры, и их 7"
+                Question.IDLE -> null
 
-        }
+            }
+        } else
+            null
     }
 
 
@@ -90,5 +90,18 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         };
 
         abstract fun nextQuestion(): Question
+
+
+        fun isValid(answer: String): Boolean {
+            return when (this) {
+                NAME -> answer.first().isUpperCase()
+                PROFESSION -> answer.first().isLowerCase()
+                MATERIAL -> !answer.matches(".*\\d+.*".toRegex())
+                BDAY -> answer.matches("[0-9]+".toRegex())
+                SERIAL -> answer.matches("[0-9]+".toRegex()).and(answer.length == 7)
+                IDLE -> true
+            }
+        }
+
     }
 }
