@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
 
         Log.d("MainActivity", "onCreate")
         val (r, g, b) = benderObj.status.color
-        benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
+        benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
 
         textTxt = tv_text
         messageEt = et_message
@@ -56,14 +56,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
         sendBtn.setOnClickListener(this)
 
         messageEt.setOnEditorActionListener { v, actionId, _ ->
-           if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val (answer, color) = benderObj.listenAnswer(v.text.toString())
-                messageEt.text.clear()
-                val (r, g, b) = color
-                benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
-                textTxt.text = answer
-                this.hideKeyboard()
-
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (messageEt.text.toString().isNotEmpty()) {
+                    val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
+                    messageEt.text.clear()
+                    val (r, g, b) = color
+                    benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+                    textTxt.text = answer
+                    this.hideKeyboard()
+                }
             }
             false
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
         outState.putString(STATUS_KEY, benderObj.status.name)
         outState.putString(question_key, benderObj.question.name)
         outState.putString(answer_key, et_message.text.toString())
-        Log.d("MainActivity","onSaveInstanceState ${benderObj.status.name}")
+        Log.d("MainActivity", "onSaveInstanceState ${benderObj.status.name}")
     }
 
     override fun onStart() {
@@ -116,17 +117,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
 
     override fun onClick(v: View?) {
         if (v?.id == iv_send.id) {
-            val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
-            messageEt.text.clear()
-            val (r, g, b) = color
-            benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
-            textTxt.text = answer
-            this.hideKeyboard()
+            if (messageEt.text.toString().isNotEmpty()) {
+                val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
+                messageEt.text.clear()
+                val (r, g, b) = color
+                benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+                textTxt.text = answer
+                this.hideKeyboard()
+            }
         }
     }
 
     override fun onSoftKeyboardShown(isShowing: Boolean) {
-        Log.d("MainActivity","onSoftKeyboardShown $isShowing")
+        Log.d("MainActivity", "onSoftKeyboardShown $isShowing")
         if (isShowing)
             this.isKeyboardOpen()
         else
