@@ -27,7 +27,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         } else {
             if (status != Status.CRITICAL) {
                 status = status.nextStatus()
-                "Это не правильный ответ\n ${question.question}" to status.color
+                "Это неправильный ответ\n${question.question}" to status.color
             } else {
                 status = Status.NORMAL
                 question = Question.NAME
@@ -93,6 +93,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
 
         fun isValid(answer: String): Boolean {
+            if (answer.isEmpty()) return false
             return when (this) {
                 NAME -> answer.first().isUpperCase()
                 PROFESSION -> answer.first().isLowerCase()
