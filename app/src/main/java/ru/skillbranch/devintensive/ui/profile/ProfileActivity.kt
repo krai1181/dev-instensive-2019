@@ -109,7 +109,7 @@ class ProfileActivity : AppCompatActivity() {
                 val isEndWith = exceptions.any { s?.endsWith(it) ?: false}
                 val isContains = s?.contains("/tree") ?: false
                 Log.d("ProfileActivity","afterTextChanged $isEndWith")
-                if (isEndWith.and(isContains.not())){
+                if (isEndWith.or(isContains)){
                     wr_repository.isErrorEnabled = true
                     wr_repository.error = "Невалидный адрес репозитория"
                 }
