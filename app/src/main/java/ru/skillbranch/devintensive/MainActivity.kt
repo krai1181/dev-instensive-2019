@@ -57,14 +57,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
 
         messageEt.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (messageEt.text.toString().isNotEmpty()) {
-                    val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
-                    messageEt.text.clear()
-                    val (r, g, b) = color
-                    benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
-                    textTxt.text = answer
-                    this.hideKeyboard()
-                }
+                val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
+                messageEt.text.clear()
+                val (r, g, b) = color
+                benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+                textTxt.text = answer
+                this.hideKeyboard()
             }
             false
 
@@ -117,15 +115,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, KeyboardListener
 
     override fun onClick(v: View?) {
         if (v?.id == iv_send.id) {
-            if (messageEt.text.toString().isNotEmpty()) {
-                val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
-                messageEt.text.clear()
-                val (r, g, b) = color
-                benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
-                textTxt.text = answer
-                this.hideKeyboard()
-            }
+            val (answer, color) = benderObj.listenAnswer(messageEt.text.toString())
+            messageEt.text.clear()
+            val (r, g, b) = color
+            benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+            textTxt.text = answer
+            this.hideKeyboard()
         }
+
     }
 
     override fun onSoftKeyboardShown(isShowing: Boolean) {
