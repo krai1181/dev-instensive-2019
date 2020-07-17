@@ -4,6 +4,9 @@ import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -26,6 +29,7 @@ class ProfileActivity : AppCompatActivity() {
 
     lateinit var viewModel: ProfileViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
@@ -51,6 +55,10 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
+            if (wr_repository.isErrorEnabled){
+                wr_repository.error = null
+                et_repository.text.clear()
+            }
             if (isEditMode) saveProfileData()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
@@ -73,6 +81,42 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+    }
+
+    private fun checkRepositoryValidation() {
+        et_repository.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val isStartWith = s?.startsWith("https://github.com/")?.or(s.startsWith("www.github.com/"))?.
+                    or(s.startsWith("https://www.github.com/"))?.or(s.startsWith("github.com/"))  ?: false
+
+                if(!isStartWith) {
+                    wr_repository.isErrorEnabled = true
+                    wr_repository.error = "Невалидный адрес репозитория"
+                }else{
+                    wr_repository.isErrorEnabled = false
+                    wr_repository.error = null
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val exceptions = listOf("enterprise","features","topics","collections","trending",
+                    "events","marketplace","pricing","nonprofit","customer-stories","security","log","join","/")
+
+                val isEndWith = exceptions.any { s?.endsWith(it) ?: false}
+                val isContains = s?.contains("/tree") ?: false
+                Log.d("ProfileActivity","afterTextChanged $isEndWith")
+                if (isEndWith.and(isContains.not())){
+                    wr_repository.isErrorEnabled = true
+                    wr_repository.error = "Невалидный адрес репозитория"
+                }
+
+            }
+
+        })
     }
 
     private fun showCurrentMode(isEdit: Boolean) {
@@ -108,9 +152,13 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.switchTheme()
         }
 
+        if (isEdit){
+            checkRepositoryValidation()
+        }
+
     }
 
-    fun saveProfileData(){
+    private fun saveProfileData() {
         Profile(
             firstName = et_first_name.text.toString(),
             lastName = et_last_name.text.toString(),
