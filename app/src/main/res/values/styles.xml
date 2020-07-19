@@ -59,5 +59,8 @@
         <item name="android:paddingRight">@dimen/spacing_normal_16</item>
         <item name="android:minHeight">72dp</item>
     </style>
+    <style name="Profile.Avatar">
+      <item name="android:color">?attr/colorAccent</item>
+    </style>
 
 </resources>

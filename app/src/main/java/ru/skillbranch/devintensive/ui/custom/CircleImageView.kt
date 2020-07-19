@@ -1,8 +1,10 @@
 package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -12,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toRectF
 import ru.skillbranch.devintensive.R
+
 
 class CircleImageView @JvmOverloads constructor(
     context: Context,
@@ -136,8 +139,19 @@ class CircleImageView @JvmOverloads constructor(
         canvas.drawOval(viewRect.toRectF(), circlePaint)
     }
 
+    private fun fetchAccentColor(): Int {
+        val typedValue = TypedValue()
+        val a: TypedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorAccent))
+        val color = a.getColor(0, 0)
+        a.recycle()
+        return color
+    }
+
+
+
     private fun drawInitials(canvas: Canvas) {
-        textPaint.color = ContextCompat.getColor(context, R.color.color_accent)
+
+        textPaint.color = fetchAccentColor()
         canvas.drawOval(viewRect.toRectF(), textPaint)
         textPaint.apply {
             color = Color.WHITE
