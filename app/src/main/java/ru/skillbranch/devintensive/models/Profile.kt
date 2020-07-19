@@ -12,7 +12,7 @@ data class Profile(
 ) {
 
     private val nickname: String = Utils.transliteration("$firstName $lastName")
-    val rank: String = "Android Developer"
+    private val rank: String = "Android Developer"
 
 
     fun toMap(): Map<String, Any>

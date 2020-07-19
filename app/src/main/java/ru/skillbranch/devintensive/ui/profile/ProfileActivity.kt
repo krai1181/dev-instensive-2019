@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.custom.CircleImageView
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 
@@ -26,6 +28,8 @@ class ProfileActivity : AppCompatActivity() {
 
     var isEditMode = false
     lateinit var viewFields: Map<String, TextView>
+
+    lateinit var avatarView:CircleImageView
 
     lateinit var viewModel: ProfileViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +54,11 @@ class ProfileActivity : AppCompatActivity() {
             "rating" to tv_rating,
             "respect" to tv_respect
         )
+
+        avatarView = iv_avatar
+        avatarView.setBorderColor("#FFFFFF")
+        avatarView.setBorderWidth(2)
+
 
         isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
         showCurrentMode(isEditMode)
@@ -81,6 +90,16 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+
+        updateAvatar()
+    }
+
+    private fun updateAvatar() {
+        val firstName = viewFields.getValue("firstName").text.toString()
+        val lastName = viewFields.getValue("lastName").text.toString()
+        if (firstName.isNotEmpty().or(lastName.isNotEmpty())) {
+            avatarView.setInitials(Utils.toInitials(firstName, lastName)!!)
+        }
     }
 
     private fun checkRepositoryValidation() {
@@ -93,12 +112,12 @@ class ProfileActivity : AppCompatActivity() {
                 val isStartWith = s?.startsWith("https://github.com/")?.or(s.startsWith("www.github.com/"))?.
                     or(s.startsWith("https://www.github.com/"))?.or(s.startsWith("github.com/"))  ?: false
 
-                if(!isStartWith) {
-                    wr_repository.isErrorEnabled = true
-                    wr_repository.error = "Невалидный адрес репозитория"
-                }else{
+                if(isStartWith.or(s.isNullOrEmpty())) {
                     wr_repository.isErrorEnabled = false
                     wr_repository.error = null
+                }else{
+                    wr_repository.isErrorEnabled = true
+                    wr_repository.error = "Невалидный адрес репозитория"
                 }
             }
 
@@ -143,6 +162,9 @@ class ProfileActivity : AppCompatActivity() {
                 resources.getDrawable(R.drawable.ic_save_black_24dp, theme)
             else
                 resources.getDrawable(R.drawable.ic_edit_black_24dp, theme)
+
+
+            updateAvatar()
 
             background.colorFilter = filter
             setImageDrawable(icon)
